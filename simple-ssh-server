@@ -1,0 +1,8 @@
+FROM alpine:latest
+RUN apk add --no-cache openssh-server
+RUN ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+RUN echo -e "devops\ndevops" | adduser -s /bin/sh -D devops
+COPY ssh_key.pub /home/devops/.ssh/authorized_keys
+RUN chown -R devops:devops /home/devops/.ssh
+RUN echo "devops:devops" | chpasswd
+CMD ["/usr/sbin/sshd", "-D"]
